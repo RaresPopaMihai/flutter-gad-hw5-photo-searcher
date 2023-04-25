@@ -50,13 +50,12 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               Expanded(
                 child: TextField(
-                  controller: _searchImageController,
-                  decoration: const InputDecoration(
+                    controller: _searchImageController,
+                    decoration: const InputDecoration(
                       label: Text('Image theme...'),
                       prefixIcon: Icon(Icons.search),
                       prefixIconColor: Colors.lightBlue,
-                  )
-                ),
+                    )),
               ),
               TextButton(
                   onPressed: () {
