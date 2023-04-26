@@ -1,16 +1,12 @@
-# homework5
+# Randomizer
 
-Random Images
+Random Images app
 
-## Getting Started
+## App Flow
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+App starts with some photos with star wars theme
+![start.png](readmeassets%2Fstart.png)
+The user can also search for a specific topic
+![search.png](readmeassets%2Fsearch.png)
+If the user doesn't write anything random images are shown
+![random.png](readmeassets%2Frandom.png)
