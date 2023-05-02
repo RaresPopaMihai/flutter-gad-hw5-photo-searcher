@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'models/picture.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -13,7 +15,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData.dark(),
       home: HomePage(),
     );
   }
@@ -27,15 +30,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const String API_KEY = 'R1q1obcW0W5Nb7rbamf1pM4YA3p_nZ2X0nliEKwSZDo';
+  static const String apiKey = 'R1q1obcW0W5Nb7rbamf1pM4YA3p_nZ2X0nliEKwSZDo';
   final TextEditingController _searchImageController = TextEditingController();
-  String searchTerm = 'star wars';
-  final List<String> _images = <String>[];
+  final ScrollController _scrollController = ScrollController();
+  String _searchTerm = 'star wars';
+  int _page = 1;
+  bool _isLoading = false;
+  bool _hasMore = true;
+  final List<Picture> _images = <Picture>[];
 
   @override
-  void initState() {
-    super.initState();
-    getImages();
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -59,11 +66,12 @@ class _HomePageState extends State<HomePage> {
               ),
               TextButton(
                   onPressed: () {
-                    searchTerm = _searchImageController.text;
-                    if (searchTerm.isEmpty) {
-                      searchTerm = 'random';
+                    _searchTerm = _searchImageController.text;
+                    if (_searchTerm.isEmpty) {
+                      _searchTerm = 'random';
                     }
-                    getImages(search: searchTerm);
+                    _page = 1;
+                    getImages(search: _searchTerm, page: 1);
                   },
                   style: TextButton.styleFrom(backgroundColor: Colors.lightBlue, foregroundColor: Colors.white),
                   child: const Text('Search'))
@@ -81,9 +89,37 @@ class _HomePageState extends State<HomePage> {
                     ),
                   )
                 : GridView.builder(
+                    controller: _scrollController,
                     itemCount: _images.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return GridTile(child: Image.network(_images[index]));
+                      final Picture picture = _images[index];
+
+                      return Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          GridTile(
+                            child: Image.network(
+                              picture.urls.regular,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Align(
+                              alignment: AlignmentDirectional.bottomEnd,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                        begin: Alignment.bottomCenter,
+                                        end: AlignmentDirectional.topCenter,
+                                        colors: [Colors.white10, Colors.transparent])),
+                                child: ListTile(
+                                  title: Text(picture.user.name),
+                                  trailing: CircleAvatar(
+                                    backgroundImage: NetworkImage(picture.user.profileImage.small),
+                                  ),
+                                ),
+                              )),
+                        ],
+                      );
                     },
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -95,23 +131,44 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> getImages({String? search}) async {
-    _images.clear();
-    final String query = search ?? searchTerm;
+  @override
+  void initState() {
+    super.initState();
+    getImages(page: _page);
+
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final height = MediaQuery.of(context).size.height;
+    final double offset = _scrollController.position.pixels;
+    final double maxRange = _scrollController.position.maxScrollExtent;
+
+    if (_hasMore && !_isLoading && (maxRange - offset) < height * 3) {
+      getImages(page: ++_page);
+    }
+  }
+
+  Future<void> getImages({String? search, required int page}) async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (page == 1) {
+      _images.clear();
+    }
+    final String query = search ?? _searchTerm;
     final http.Client client = http.Client();
-    final Uri uri = Uri.parse('https://api.unsplash.com/search/photos?query=$query');
+    final Uri uri = Uri.parse('https://api.unsplash.com/search/photos?query=$query&per_page=38&page=$page');
     final http.Response response =
-        await client.get(uri, headers: <String, String>{'Authorization': 'Client-ID $API_KEY'});
+        await client.get(uri, headers: <String, String>{'Authorization': 'Client-ID $apiKey'});
     if (response.statusCode == 200) {
       final Map<String, dynamic> result = jsonDecode(response.body) as Map<String, dynamic>;
       final List<dynamic> imageResults = result['results'] as List<dynamic>;
-      setState(() {
-        for (final dynamic imageResult in imageResults) {
-          final Map<String, dynamic> image = imageResult as Map<String, dynamic>;
-          final Map<String, dynamic> imageUrl = image['urls'] as Map<String, dynamic>;
+      _hasMore = int.parse(result['total_pages'] as String) < page;
 
-          _images.add(imageUrl['regular'] as String);
-        }
+      setState(() {
+        _images.addAll(imageResults.cast<Map<dynamic, dynamic>>().map((Map json) => Picture.fromJson(json)));
+        _isLoading = false;
       });
     }
   }
