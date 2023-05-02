@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> result = jsonDecode(response.body) as Map<String, dynamic>;
       final List<dynamic> imageResults = result['results'] as List<dynamic>;
-      _hasMore = int.parse(result['total_pages'] as String) < page;
+      _hasMore = result['total_pages'] as int < page;
 
       setState(() {
         _images.addAll(imageResults.cast<Map<dynamic, dynamic>>().map((Map json) => Picture.fromJson(json)));
