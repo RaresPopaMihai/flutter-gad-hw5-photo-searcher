@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
 
                       return Stack(
                         fit: StackFit.expand,
-                        children: [
+                        children: <Widget>[
                           GridTile(
                             child: Image.network(
                               picture.urls.regular,
@@ -107,10 +107,12 @@ class _HomePageState extends State<HomePage> {
                               alignment: AlignmentDirectional.bottomEnd,
                               child: Container(
                                 decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.bottomCenter,
-                                        end: AlignmentDirectional.topCenter,
-                                        colors: [Colors.white10, Colors.transparent])),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: AlignmentDirectional.topCenter,
+                                    colors: <Color>[Colors.white10, Colors.transparent],
+                                  ),
+                                ),
                                 child: ListTile(
                                   title: Text(picture.user.name),
                                   trailing: CircleAvatar(
@@ -140,7 +142,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onScroll() {
-    final height = MediaQuery.of(context).size.height;
+    final double height = MediaQuery.of(context).size.height;
     final double offset = _scrollController.position.pixels;
     final double maxRange = _scrollController.position.maxScrollExtent;
 
@@ -167,7 +169,8 @@ class _HomePageState extends State<HomePage> {
       _hasMore = result['total_pages'] as int < page;
 
       setState(() {
-        _images.addAll(imageResults.cast<Map<dynamic, dynamic>>().map((Map json) => Picture.fromJson(json)));
+        _images.addAll(
+            imageResults.cast<Map<dynamic, dynamic>>().map((Map<dynamic, dynamic> json) => Picture.fromJson(json)));
         _isLoading = false;
       });
     }
