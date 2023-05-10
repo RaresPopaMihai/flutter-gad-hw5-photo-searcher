@@ -8,8 +8,3 @@ class GetImages with _$GetImages {
 
   const factory GetImages.error(Object error, StackTrace stackTrace) = GetImagesError;
 }
-
-
-
-
-
