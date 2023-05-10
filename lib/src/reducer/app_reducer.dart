@@ -8,24 +8,24 @@ AppState reducer(AppState state, dynamic action) {
 }
 
 Reducer<AppState> _reducer = combineReducers(<Reducer<AppState>>[
-  TypedReducer<AppState, GetImagesSuccessful>(_getImagesStart).call,
+  TypedReducer<AppState, GetImagesStart>(_getImagesStart).call,
   TypedReducer<AppState, GetImagesSuccessful>(_getImagesSuccessful).call,
-  TypedReducer<AppState, GetImagesSuccessful>(_getImagesError).call
+  TypedReducer<AppState, GetImagesError>(_getImagesError).call
 ]);
 
 AppState _getImagesSuccessful(AppState state, GetImagesSuccessful action) {
   return state.copyWith(
-    images: <Picture>[...state.images, ...action.images],
+    images: <Picture>[if (state.page != 1) ...state.images, ...action.images],
     isLoading: false,
     hasMore: action.images.isNotEmpty,
     page: state.page + 1,
   );
 }
 
-AppState _getImagesStart(AppState state, GetImagesSuccessful action) {
-  return state.copyWith(isLoading: true);
+AppState _getImagesStart(AppState state, GetImagesStart action) {
+  return state.copyWith(isLoading: true, searchTerm: action.search, page: action.page);
 }
 
-AppState _getImagesError(AppState state, GetImagesSuccessful action) {
+AppState _getImagesError(AppState state, GetImagesError action) {
   return state.copyWith(isLoading: false);
 }
