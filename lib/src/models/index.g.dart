@@ -7,11 +7,14 @@ part of 'index.dart';
 // **************************************************************************
 
 _$AppState$ _$$AppState$FromJson(Map<String, dynamic> json) => _$AppState$(
-      images: (json['images'] as List<dynamic>?)?.map((e) => Picture.fromJson(e as Map<String, dynamic>)).toList() ??
+      images: (json['images'] as List<dynamic>?)
+              ?.map((dynamic e) => Picture.fromJson(e as Map<String, dynamic>))
+              .toList() ??
           const <Picture>[],
       isLoading: json['isLoading'] as bool? ?? false,
       hasMore: json['hasMore'] as bool? ?? true,
       searchTerm: json['searchTerm'] as String? ?? 'star wars',
+      selectedImageId: json['selectedImageId'] as String?,
       page: json['page'] as int? ?? 1,
     );
 
@@ -20,6 +23,7 @@ Map<String, dynamic> _$$AppState$ToJson(_$AppState$ instance) => <String, dynami
       'isLoading': instance.isLoading,
       'hasMore': instance.hasMore,
       'searchTerm': instance.searchTerm,
+      'selectedImageId': instance.selectedImageId,
       'page': instance.page,
     };
 
