@@ -10,7 +10,8 @@ AppState reducer(AppState state, dynamic action) {
 Reducer<AppState> _reducer = combineReducers(<Reducer<AppState>>[
   TypedReducer<AppState, GetImagesStart>(_getImagesStart).call,
   TypedReducer<AppState, GetImagesSuccessful>(_getImagesSuccessful).call,
-  TypedReducer<AppState, GetImagesError>(_getImagesError).call
+  TypedReducer<AppState, GetImagesError>(_getImagesError).call,
+  TypedReducer<AppState, SetSelectedImage>(_setSelectedImage).call,
 ]);
 
 AppState _getImagesSuccessful(AppState state, GetImagesSuccessful action) {
@@ -28,4 +29,8 @@ AppState _getImagesStart(AppState state, GetImagesStart action) {
 
 AppState _getImagesError(AppState state, GetImagesError action) {
   return state.copyWith(isLoading: false);
+}
+
+AppState _setSelectedImage(AppState state, SetSelectedImage action) {
+  return state.copyWith(selectedImageId: action.selectedPictureId);
 }

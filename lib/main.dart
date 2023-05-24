@@ -9,6 +9,7 @@ import 'src/data/unsplash_api.dart';
 import 'src/epics/app_epics.dart';
 import 'src/models/index.dart';
 import 'src/presentation/home_page.dart';
+import 'src/presentation/picture_details.dart';
 import 'src/reducer/app_reducer.dart';
 
 void main() {
@@ -35,7 +36,10 @@ class MyApp extends StatelessWidget {
       store: store,
       child: MaterialApp(
         theme: ThemeData.dark(),
-        home: const HomePage(),
+        routes: <String, WidgetBuilder>{
+          '/': (BuildContext context) => const HomePage(),
+          '/details': (BuildContext context) => const PictureDetails(),
+        },
       ),
     );
   }

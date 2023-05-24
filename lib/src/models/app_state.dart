@@ -7,6 +7,7 @@ class AppState with _$AppState {
     @Default(false) bool isLoading,
     @Default(true) bool hasMore,
     @Default('star wars') String searchTerm,
+    String? selectedImageId ,
     @Default(1) int page,
   }) = AppState$;
 

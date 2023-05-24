@@ -64,33 +64,39 @@ class _HomePageState extends State<HomePage> {
                   (BuildContext context, int index) {
                     final Picture picture = images[index];
 
-                    return Stack(
-                      fit: StackFit.expand,
-                      children: <Widget>[
-                        GridTile(
-                          child: CachedNetworkImage(
-                            imageUrl: picture.urls.regular,
-                            fit: BoxFit.cover,
+                    return GestureDetector(
+                      onTap: (){
+                        StoreProvider.of<AppState>(context).dispatch(SetSelectedImage(picture.id));
+                         Navigator.pushNamed(context, '/details');
+                      },
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: <Widget>[
+                          GridTile(
+                            child: CachedNetworkImage(
+                              imageUrl: picture.urls.regular,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        Align(
-                            alignment: AlignmentDirectional.bottomEnd,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.bottomCenter,
-                                  end: AlignmentDirectional.topCenter,
-                                  colors: <Color>[Colors.white10, Colors.transparent],
+                          Align(
+                              alignment: AlignmentDirectional.bottomEnd,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: AlignmentDirectional.topCenter,
+                                    colors: <Color>[Colors.white10, Colors.transparent],
+                                  ),
                                 ),
-                              ),
-                              child: ListTile(
-                                title: Text(picture.user.name),
-                                trailing: CircleAvatar(
-                                  backgroundImage: NetworkImage(picture.user.profileImage.small),
+                                child: ListTile(
+                                  title: Text(picture.user.name),
+                                  trailing: CircleAvatar(
+                                    backgroundImage: NetworkImage(picture.user.profileImage.small),
+                                  ),
                                 ),
-                              ),
-                            )),
-                      ],
+                              )),
+                        ],
+                      ),
                     );
                   },
                   childCount: images.length,
