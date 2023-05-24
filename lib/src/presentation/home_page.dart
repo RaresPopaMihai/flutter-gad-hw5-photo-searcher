@@ -65,9 +65,9 @@ class _HomePageState extends State<HomePage> {
                     final Picture picture = images[index];
 
                     return GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         StoreProvider.of<AppState>(context).dispatch(SetSelectedImage(picture.id));
-                         Navigator.pushNamed(context, '/details');
+                        Navigator.pushNamed(context, '/details');
                       },
                       child: Stack(
                         fit: StackFit.expand,

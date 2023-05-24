@@ -24,34 +24,36 @@ class PictureDetails extends StatelessWidget {
               ),
             ],
           ),
-          body: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[CachedNetworkImage(
+          body: Stack(fit: StackFit.expand, children: <Widget>[
+            CachedNetworkImage(
               imageUrl: picture.urls.regular,
               fit: BoxFit.fill,
-              ),
-              Align(
-                alignment: AlignmentDirectional.bottomEnd,
-                child: ListTile(
-                  title: Row(
-                    children: <Widget>
-                    [
-                      const SizedBox(width: 5,),
-                      const Icon(
-                        Icons.thumb_up_sharp,
-                        color: Colors.blueAccent,
-                      ),
-                      const SizedBox(width: 5,),
-                      Text(picture.likes.toString())
-                    ],
-                  ),
-                  trailing: Container(
-                    margin: const EdgeInsets.only(right: 5),
-                      child: Text('Created at: ${picture.createdAt.day}.${picture.createdAt.month}.${picture.createdAt.year}')),
+            ),
+            Align(
+              alignment: AlignmentDirectional.bottomEnd,
+              child: ListTile(
+                title: Row(
+                  children: <Widget>[
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    const Icon(
+                      Icons.thumb_up_sharp,
+                      color: Colors.blueAccent,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(picture.likes.toString())
+                  ],
                 ),
-              )
-            ]
-          ),
+                trailing: Container(
+                    margin: const EdgeInsets.only(right: 5),
+                    child: Text(
+                        'Created at: ${picture.createdAt.day}.${picture.createdAt.month}.${picture.createdAt.year}')),
+              ),
+            )
+          ]),
         );
       },
     );
